@@ -332,13 +332,13 @@ function Dashboard() {
             <div className="col-md-6 d-flex align-items-center justify-content-between">
               <div className="card">
                 <div className="card-body d-flex align-items-center">
-                  <h5 className="card-title mb-0">Pending Payment: €{lastTotalAmountCost?.toFixed(2)}</h5>
+                  <h5 className="card-title mb-0">Pre-reward Payment: €{lastTotalAmountCost?.toFixed(2)}</h5>
                 </div>
                 <div className="card-body d-flex align-items-center">
                   <h5 className="card-title mb-0">Your reward savings this month: €{lastSelectedRevenue?.toFixed(2)}</h5>
                   </div>
                 <div className="card-body d-flex align-items-center">
-                  <h5 className="card-title mb-0">Total Amount: €{(lastTotalAmountCost?.toFixed(2) - lastSelectedRevenue?.toFixed(2)).toFixed(2)}</h5>
+                  <h5 className="card-title mb-0">Post-reward Payment: €{(lastTotalAmountCost?.toFixed(2) - lastSelectedRevenue?.toFixed(2)).toFixed(2)}</h5>
                   </div>
               </div>
 

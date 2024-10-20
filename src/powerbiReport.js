@@ -9,6 +9,15 @@ function PowerBIReport() {
           frameBorder="0"
           allowFullScreen={true}
         />
+
+        <iframe
+          title="PPT Report"
+          src="https://app.powerbi.com/reportEmbed?reportId=e5695da2-36e1-44a3-a573-d777904868ab&autoAuth=true&ctid=8dd1e6b4-8dac-408e-8d8d-6753e9800530"
+          width="100%"
+          height="100%"
+          frameBorder="0"
+          allowFullScreen={true}
+        />
       </div>
     );
   }

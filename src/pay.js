@@ -1,9 +1,11 @@
 import React from 'react';
 
-const Pay = ({amount, setLastTotalAmountCost}) => {
+const Pay = ({amount, setLastTotalAmountCost, setLastSelectedRevenue, handlePaymentSuccess}) => {
   const handleButtonClick = () => {
     window.open('http://localhost:80/create_payment/'+ amount, '_blank');
     setLastTotalAmountCost(0);
+    setLastSelectedRevenue(0);
+    handlePaymentSuccess(true);
     console.log('Payment button clicked');
     console.log('Amount to pay: ', amount);
   };

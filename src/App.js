@@ -116,6 +116,9 @@ import PowerBIReport from './powerbiReport.js';
 import Pay from './pay.js';
 import S3BucketContent from './backet.js'
 
+import Modal from './Modal'; // Import the Modal component
+
+
 
 // Generate mock sales data
 const mockSalesData = [
@@ -162,13 +165,21 @@ const mockSalesData = [
 const COLORS = ['#0d6efd', '#0dcaf0', '#198754', '#ffc107'];
 
 function Dashboard() {
+  const [showModal, setShowModal] = useState(false);
+
+  // Function to handle payment success and show the modal
+  const handlePaymentSuccess = () => {
+    setShowModal(true); // Show the modal
+  };
+
+  // Function to close the modal
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
   const [selectedBar, setSelectedBar] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedCategories, setSelectedCategories] = useState(null);
-  const [selectedRevenue, setSelectedRevenue] = useState({
-    value: mockSalesData[mockSalesData.length - 1].revenue,
-    change: mockSalesData[mockSalesData.length - 1].revenueChange
-  });
   const [breakdown, setBreakdown] = useState(null);
   const [totalAmount, settotalAmount] = useState(null);
 
@@ -184,6 +195,8 @@ function Dashboard() {
   }, []);
 
   const [lastTotalAmountCost, setLastTotalAmountCost] = useState(null);
+  const [lastSelectedRevenue, setLastSelectedRevenue] = useState(null);
+  const [lastSelectedRevenueChange, setLastSelectedRevenueChange] = useState(null);
 
   useEffect(() => {
     if (breakdown) {
@@ -237,6 +250,9 @@ function Dashboard() {
       setCalculatedSalesData(updatedSalesData);
       const lastCost = updatedSalesData[updatedSalesData.length - 1]?.breakdownCosts.totalAmountCost;
       setLastTotalAmountCost(lastCost);
+
+      const lastRevenueChange = updatedSalesData[updatedSalesData.length - 1]?.revenueChange;
+      setLastSelectedRevenue(lastRevenueChange);
     }
   }, [breakdown]);
 
@@ -244,11 +260,6 @@ function Dashboard() {
     setSelectedBar(index);
     setSelectedMonth(data.name);
     setSelectedCategories(data.categoryBreakdown);
-    setSelectedRevenue({
-      value: data.revenue,
-      change: data.revenueChange
-    });
-    setLastTotalAmountCost(data.breakdownCosts.totalAmountCost);
   };
 
   // Custom Tooltip Component for Bar Chart
@@ -289,8 +300,6 @@ function Dashboard() {
 
   return (
     <div className="d-flex">
-      {/* <Sidebar /> */}
-      {/* Sidebar */}
       <div className="bg-primary" style={{ width: '164px', height: '100vh', position: 'fixed' }}>
   <div className="d-flex flex-column align-items-center py-4 gap-3">
     <div className="bg-white bg-opacity-75 rounded d-flex justify-content-center align-items-center text-pretty" style={{ width: '112px', height: '40px', padding: '8px' }}></div>
@@ -299,8 +308,6 @@ function Dashboard() {
     <div className="bg-white bg-opacity-25 rounded d-flex justify-content-center align-items-center text-pretty" style={{ width: '112px', height: '40px', padding: '8px' }}></div>
   </div>
 </div>
-
-
 
       {/* Main Content */}
       <div className="flex-grow-1" style={{ marginLeft: '204px' }}>
@@ -322,21 +329,22 @@ function Dashboard() {
         <main className="p-4 bg-light">
           {/* Stats Cards */}
           <div className="row g-4 mb-4">
-            <div className="col-md-4 d-flex align-items-center justify-content-between">
+            <div className="col-md-6 d-flex align-items-center justify-content-between">
               <div className="card">
                 <div className="card-body d-flex align-items-center">
                   <h5 className="card-title mb-0">Pending Payment: €{lastTotalAmountCost?.toFixed(2)}</h5>
                 </div>
                 <div className="card-body d-flex align-items-center">
-                  <h5 className="card-title mb-0">Your reward savings this month: €{selectedRevenue.change?.toFixed(2)}</h5>
+                  <h5 className="card-title mb-0">Your reward savings this month: €{lastSelectedRevenue?.toFixed(2)}</h5>
                   </div>
                 <div className="card-body d-flex align-items-center">
-                  <h5 className="card-title mb-0">Total Amount: €{(lastTotalAmountCost?.toFixed(2) - selectedRevenue.change?.toFixed(2)).toFixed(2)}</h5>
+                  <h5 className="card-title mb-0">Total Amount: €{(lastTotalAmountCost?.toFixed(2) - lastSelectedRevenue?.toFixed(2)).toFixed(2)}</h5>
                   </div>
               </div>
 
-              <div className="col-md-3 d-flex justify-content-center align-items-center buttonW ">
-                <Pay amount={(lastTotalAmountCost?.toFixed(2) - selectedRevenue.change?.toFixed(2)).toFixed(2)} setLastTotalAmountCost={setLastTotalAmountCost} />
+              <div className="col-md-4 d-flex justify-content-center align-items-center buttonW ">
+                <Pay amount={(lastTotalAmountCost?.toFixed(2) - lastSelectedRevenue?.toFixed(2)).toFixed(2)} setLastTotalAmountCost={setLastTotalAmountCost} setLastSelectedRevenue={setLastSelectedRevenue} handlePaymentSuccess={handlePaymentSuccess}/>
+
               </div>
             </div>
           </div>
@@ -413,6 +421,7 @@ function Dashboard() {
                         </Pie>
                       </PieChart>
                     </ResponsiveContainer>
+
                   </div>
                   
                 </div>
@@ -453,7 +462,10 @@ function Dashboard() {
 
         <PowerBIReport />
 
-        <S3BucketContent />
+        {/* <S3BucketContent /> */}
+
+        <Modal show={showModal} onClose={closeModal} />
+
 
       </div>
 

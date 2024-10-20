@@ -248,6 +248,7 @@ function Dashboard() {
       value: data.revenue,
       change: data.revenueChange
     });
+    setLastTotalAmountCost(data.breakdownCosts.totalAmountCost);
   };
 
   // Custom Tooltip Component for Bar Chart
@@ -271,7 +272,7 @@ function Dashboard() {
         <div className="bg-white p-2 border rounded shadow">
           <p className="mb-0"><strong>{payload[0].name}</strong></p>
           <p className="mb-0">{payload[0].value.toLocaleString()} kWh</p>
-          <p className="mb-0">{percentage.toFixed(1)}%</p>
+          <p className="mb-0">{percentage?.toFixed(1)}%</p>
         </div>
       );
     }
@@ -306,9 +307,12 @@ function Dashboard() {
         {/* Header */}
         <header className="bg-white shadow-sm p-3">
           <div className="d-flex justify-content-between align-items-center">
-            <h1 className="h4 mb-0">Energy Consumption Overview</h1>
+            <h1 className="h4 mb-0">Your Energy Consumption Overview</h1>
             <div className="d-flex align-items-center gap-3">
-              <span className="text-muted">Apr 15, 2024 - Apr 21, 2024</span>
+              <span className="text-muted">1/20/2024 - </span>
+
+              <span className="text-muted">{new Date().toLocaleDateString()}</span>
+              <span className="text-muted">Welcome, DEMETRIS KOSTA</span>
               <div className="bg-secondary rounded-circle" style={{ width: '32px', height: '32px' }}></div>
             </div>
           </div>
@@ -321,13 +325,18 @@ function Dashboard() {
             <div className="col-md-4 d-flex align-items-center justify-content-between">
               <div className="card">
                 <div className="card-body d-flex align-items-center">
-                  {/* <OrdersCard orders={1758} change={-2.35} /> */}
-                  <h5 className="card-title mb-0">Pending Payment: ${lastTotalAmountCost.toFixed(2)}</h5> 
+                  <h5 className="card-title mb-0">Pending Payment: €{lastTotalAmountCost?.toFixed(2)}</h5>
                 </div>
+                <div className="card-body d-flex align-items-center">
+                  <h5 className="card-title mb-0">Your reward savings this month: €{selectedRevenue.change?.toFixed(2)}</h5>
+                  </div>
+                <div className="card-body d-flex align-items-center">
+                  <h5 className="card-title mb-0">Total Amount: €{(lastTotalAmountCost?.toFixed(2) - selectedRevenue.change?.toFixed(2)).toFixed(2)}</h5>
+                  </div>
               </div>
 
-              <div className="col-md-3 d-flex justify-content-center align-items-center">
-                <Pay />
+              <div className="col-md-3 d-flex justify-content-center align-items-center buttonW ">
+                <Pay amount={(lastTotalAmountCost?.toFixed(2) - selectedRevenue.change?.toFixed(2)).toFixed(2)} setLastTotalAmountCost={setLastTotalAmountCost} />
               </div>
             </div>
           </div>

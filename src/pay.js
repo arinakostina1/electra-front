@@ -1,13 +1,16 @@
 import React from 'react';
 
-const Pay = () => {
+const Pay = ({amount, setLastTotalAmountCost}) => {
   const handleButtonClick = () => {
-    window.open('https://app.powerbi.com/reportEmbed?reportId=6e9ec247-d891-4db6-af70-d87aac4e4731&autoAuth=true&ctid=8dd1e6b4-8dac-408e-8d8d-6753e9800530', '_blank');
+    window.open('http://localhost:80/create_payment/'+ amount, '_blank');
+    setLastTotalAmountCost(0);
+    console.log('Payment button clicked');
+    console.log('Amount to pay: ', amount);
   };
 
   return (
     <button onClick={handleButtonClick} style={buttonStyle}>
-      Pay
+      Pay your green bill
     </button>
   );
 };
@@ -16,7 +19,7 @@ const buttonStyle = {
   padding: '10px 20px',
   fontSize: '16px',
   color: '#fff',
-  backgroundColor: '#007bff',
+  backgroundColor: '#28a745', // light green #28a745
   border: 'none',
   borderRadius: '5px',
   cursor: 'pointer',
